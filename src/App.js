@@ -132,7 +132,7 @@ function App() {
 
   useEffect(() => {
     clearActive();
-    let active = 0;
+    let availableMoves = 0;
     gameState.forEach((row, r) => {
       row.forEach((item, i) => {
         if (item === "1") {
@@ -146,7 +146,8 @@ function App() {
           };
           const nVal = gameState[n.y]?.[n.x];
           const naVal = gameState[na.y]?.[na.x];
-          if (nVal && nVal === "1" && naVal && naVal === "0") active += 1;
+          if (nVal && nVal === "1" && naVal && naVal === "0")
+            availableMoves += 1;
           const w = {
             x: i - 1,
             y: r,
@@ -157,7 +158,8 @@ function App() {
           };
           const wVal = gameState[w.y]?.[w.x];
           const waVal = gameState[wa.y]?.[wa.x];
-          if (wVal && wVal === "1" && waVal && waVal === "0") active += 1;
+          if (wVal && wVal === "1" && waVal && waVal === "0")
+            availableMoves += 1;
           const s = {
             x: i,
             y: r + 1,
@@ -168,7 +170,8 @@ function App() {
           };
           const sVal = gameState[s.y]?.[s.x];
           const saVal = gameState[sa.y]?.[sa.x];
-          if (sVal && sVal === "1" && saVal && saVal === "0") active += 1;
+          if (sVal && sVal === "1" && saVal && saVal === "0")
+            availableMoves += 1;
           const e = {
             x: i + 1,
             y: r,
@@ -179,12 +182,13 @@ function App() {
           };
           const eVal = gameState[e.y]?.[e.x];
           const eaVal = gameState[ea.y]?.[ea.x];
-          if (eVal && eVal === "1" && eaVal && eaVal === "0") active += 1;
+          if (eVal && eVal === "1" && eaVal && eaVal === "0")
+            availableMoves += 1;
         }
       });
     });
-    // console.log("active", active);
-    if (step > 0 && active < 1) {
+    // console.log("availableMoves", availableMoves);
+    if (step > 0 && availableMoves < 1) {
       setActiveDialog("gameover");
     }
   }, [step, gameState, clearActive]);
