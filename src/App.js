@@ -32,7 +32,7 @@ function App() {
   const [activeX, setActiveX] = useState(null);
   const [activeY, setActiveY] = useState(null);
   const [gameState, setGameState] = useState([]);
-  const [isRestartVisible, setIsRestartVisible] = useState(false);
+  const [activeDialog, setActiveDialog] = useState("");
 
   const clearActive = useCallback(() => {
     setActiveX(null);
@@ -122,13 +122,68 @@ function App() {
   const restart = () => {
     const newGameState = generateGameState(SIZE);
     setGameState(newGameState);
-    setIsRestartVisible(false);
+    setActiveDialog("");
     clearActive();
   };
 
   useEffect(() => {
     clearActive();
-  }, [gameState, clearActive]);
+    let active = 0;
+    gameState.forEach((row, r) => {
+      row.forEach((item, i) => {
+        if (item === "1") {
+          const n = {
+            x: i,
+            y: r - 1,
+          };
+          const na = {
+            x: i,
+            y: r - 2,
+          };
+          const nVal = gameState[n.y]?.[n.x];
+          const naVal = gameState[na.y]?.[na.x];
+          if (nVal && nVal === "1" && naVal && naVal === "0") active += 1;
+          const w = {
+            x: i - 1,
+            y: r,
+          };
+          const wa = {
+            x: i - 2,
+            y: r,
+          };
+          const wVal = gameState[w.y]?.[w.x];
+          const waVal = gameState[wa.y]?.[wa.x];
+          if (wVal && wVal === "1" && waVal && waVal === "0") active += 1;
+          const s = {
+            x: i,
+            y: r + 1,
+          };
+          const sa = {
+            x: i,
+            y: r + 2,
+          };
+          const sVal = gameState[s.y]?.[s.x];
+          const saVal = gameState[sa.y]?.[sa.x];
+          if (sVal && sVal === "1" && saVal && saVal === "0") active += 1;
+          const e = {
+            x: i + 1,
+            y: r,
+          };
+          const ea = {
+            x: i + 2,
+            y: r,
+          };
+          const eVal = gameState[e.y]?.[e.x];
+          const eaVal = gameState[ea.y]?.[ea.x];
+          if (eVal && eVal === "1" && eaVal && eaVal === "0") active += 1;
+        }
+      });
+    });
+    // console.log("active", active);
+    if (step > 0 && active < 1) {
+      setActiveDialog("gameover");
+    }
+  }, [step, gameState, clearActive]);
 
   useEffect(() => {
     const newGameState = generateGameState(SIZE);
@@ -142,7 +197,7 @@ function App() {
         style={{ width: BOARD_SIZE, height: BOARD_SIZE }}
       >
         <div className="hud">
-          <button onClick={() => setIsRestartVisible(true)}>Restart</button>
+          <button onClick={() => setActiveDialog("restart")}>Restart</button>
         </div>
         {gameState.map((row, r) => {
           return (
@@ -199,21 +254,21 @@ function App() {
           );
         })}
       </div>
-      <dialog open={isRestartVisible}>
+      <dialog open={!!activeDialog}>
         <article>
-          <h3>Restart Game</h3>
-          <p>Are you sure want to restart the game?</p>
+          {activeDialog === "restart" && <h3>Restart Game</h3>}
+          {activeDialog === "gameover" && <h3>Game Over</h3>}
+          {activeDialog === "restart" && (
+            <p>Are you sure want to restart the game?</p>
+          )}
+          {activeDialog === "gameover" && (
+            <p>No more possible move available. Please restart the game.</p>
+          )}
           <footer>
-            <button
-              role="button"
-              className="secondary"
-              onClick={() => setIsRestartVisible(false)}
-            >
+            <button className="secondary" onClick={() => setActiveDialog("")}>
               Cancel
             </button>
-            <button role="button" onClick={() => restart()}>
-              Restart
-            </button>
+            <button onClick={() => restart()}>Restart</button>
           </footer>
         </article>
       </dialog>
