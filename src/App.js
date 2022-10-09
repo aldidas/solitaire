@@ -208,7 +208,7 @@ function App() {
         </div>
         {gameState.map((row, r) => {
           return (
-            <div key={`row-${r}`} className="grid">
+            <div key={`row-${r}`} className="row">
               {row.map((item, i) => {
                 let ele;
                 const itemSize = 700 / SIZE;
