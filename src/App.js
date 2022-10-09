@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import classnames from "classnames";
-import { generateGameState } from "./utils"
-import { SIZE, BOARD_SIZE } from "./constants"
+import { generateGameState, statusWatcher } from "./utils";
+import { SIZE, BOARD_SIZE } from "./constants";
 
 import "./App.css";
 
@@ -109,66 +109,11 @@ function App() {
 
   useEffect(() => {
     clearActive();
-    let availableMoves = 0;
-    gameState.forEach((row, r) => {
-      row.forEach((item, i) => {
-        if (item === "1") {
-          const n = {
-            x: i,
-            y: r - 1,
-          };
-          const na = {
-            x: i,
-            y: r - 2,
-          };
-          const nVal = gameState[n.y]?.[n.x];
-          const naVal = gameState[na.y]?.[na.x];
-          if (nVal && nVal === "1" && naVal && naVal === "0")
-            availableMoves += 1;
-          const w = {
-            x: i - 1,
-            y: r,
-          };
-          const wa = {
-            x: i - 2,
-            y: r,
-          };
-          const wVal = gameState[w.y]?.[w.x];
-          const waVal = gameState[wa.y]?.[wa.x];
-          if (wVal && wVal === "1" && waVal && waVal === "0")
-            availableMoves += 1;
-          const s = {
-            x: i,
-            y: r + 1,
-          };
-          const sa = {
-            x: i,
-            y: r + 2,
-          };
-          const sVal = gameState[s.y]?.[s.x];
-          const saVal = gameState[sa.y]?.[sa.x];
-          if (sVal && sVal === "1" && saVal && saVal === "0")
-            availableMoves += 1;
-          const e = {
-            x: i + 1,
-            y: r,
-          };
-          const ea = {
-            x: i + 2,
-            y: r,
-          };
-          const eVal = gameState[e.y]?.[e.x];
-          const eaVal = gameState[ea.y]?.[ea.x];
-          if (eVal && eVal === "1" && eaVal && eaVal === "0")
-            availableMoves += 1;
-        }
-      });
-    });
-    // console.log("availableMoves", availableMoves);
+    const availableMoves = statusWatcher(gameState);
     if (step > 0 && availableMoves < 1) {
       setActiveDialog("gameover");
     }
-  }, [step, gameState, clearActive]);
+  }, [step, gameState, clearActive, setActiveDialog]);
 
   useEffect(() => {
     const newGameState = generateGameState(SIZE);
