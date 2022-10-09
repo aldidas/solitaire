@@ -29,6 +29,7 @@ const generateGameState = (size = 7) => {
 };
 
 function App() {
+  const [step, setStep] = useState(0);
   const [activeX, setActiveX] = useState(null);
   const [activeY, setActiveY] = useState(null);
   const [gameState, setGameState] = useState([]);
@@ -115,14 +116,17 @@ function App() {
         ...stateAfterTarget.slice(betweenY + 1),
       ];
       setGameState(stateAfterBetween);
+      const newStep = step + 1;
+      setStep(newStep);
     },
-    [activeX, activeY, clearActive, setGameState]
+    [step, gameState, activeX, activeY, clearActive, setStep, setGameState]
   );
 
   const restart = () => {
     const newGameState = generateGameState(SIZE);
     setGameState(newGameState);
     setActiveDialog("");
+    setStep(0);
     clearActive();
   };
 
@@ -197,6 +201,9 @@ function App() {
         style={{ width: BOARD_SIZE, height: BOARD_SIZE }}
       >
         <div className="hud">
+          <div>
+            <small>{`Move: ${step}`}</small>
+          </div>
           <button onClick={() => setActiveDialog("restart")}>Restart</button>
         </div>
         {gameState.map((row, r) => {
