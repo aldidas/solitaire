@@ -1,9 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
 import classnames from "classnames";
+import UIfx from 'uifx';
 import { generateGameState, statusWatcher } from "./utils";
 import { SIZE, BOARD_SIZE } from "./constants";
+import wehWehSound from "./weh-weh.mp3";
 
 import "./App.css";
+
+const wehWeh = new UIfx(wehWehSound);
 
 function App() {
   const [step, setStep] = useState(0);
@@ -111,6 +115,7 @@ function App() {
     clearActive();
     const availableMoves = statusWatcher(gameState);
     if (step > 0 && availableMoves < 1) {
+      wehWeh.play()
       setActiveDialog("gameover");
     }
   }, [step, gameState, clearActive, setActiveDialog]);
