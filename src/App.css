@@ -2,7 +2,7 @@
 
 }
 .game-wrap {
-  margin: 25px auto;
+  margin: 25px auto 0;
   background: #000;
   position: relative;
 }
@@ -44,4 +44,26 @@ dialog article > footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  padding: 5px;
+  font-size: .5rem;
+  background: #333;
+}
+.panel > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.panel button {
+  font-size: .5rem;
+  margin-bottom: 0;
+  display: inline-block !important;
+  padding: .5rem !important;
+  width: auto !important;
+  border: 0;
 }

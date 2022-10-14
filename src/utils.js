@@ -1,7 +1,7 @@
 import flatten from "lodash/flatten";
 import { TEMPLATES } from "./constants";
 
-export const generateGameState = (type = "pyramid") => {
+export const generateGameState = (type = "cross") => {
   return TEMPLATES[type];
 };
 
