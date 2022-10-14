@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import classnames from "classnames";
-import UIfx from 'uifx';
+import UIfx from "uifx";
 import { generateGameState, statusWatcher } from "./utils";
 import { SIZE, BOARD_SIZE } from "./constants";
 import wehWehSound from "./weh-weh.mp3";
@@ -104,7 +104,7 @@ function App() {
   );
 
   const restart = () => {
-    const newGameState = generateGameState(SIZE);
+    const newGameState = generateGameState();
     setGameState(newGameState);
     setActiveDialog("");
     setStep(0);
@@ -113,15 +113,17 @@ function App() {
 
   useEffect(() => {
     clearActive();
-    const availableMoves = statusWatcher(gameState);
-    if (step > 0 && availableMoves < 1) {
-      wehWeh.play()
+    const { availableMoves, itemLeft } = statusWatcher(gameState);
+    if (itemLeft === 1) {
+      setActiveDialog("win");
+    } else if (step > 0 && availableMoves < 1) {
+      wehWeh.play();
       setActiveDialog("gameover");
     }
   }, [step, gameState, clearActive, setActiveDialog]);
 
   useEffect(() => {
-    const newGameState = generateGameState(SIZE);
+    const newGameState = generateGameState();
     setGameState(newGameState);
   }, []);
 
@@ -194,8 +196,12 @@ function App() {
       </div>
       <dialog open={!!activeDialog}>
         <article>
+          {activeDialog === "win" && <h3>You Won</h3>}
           {activeDialog === "restart" && <h3>Restart Game</h3>}
           {activeDialog === "gameover" && <h3>Game Over</h3>}
+          {activeDialog === "win" && (
+            <p>Click restart to start a new game.</p>
+          )}
           {activeDialog === "restart" && (
             <p>Are you sure want to restart the game?</p>
           )}
@@ -203,10 +209,16 @@ function App() {
             <p>No more possible move available. Please restart the game.</p>
           )}
           <footer>
-            <button className="secondary" onClick={() => setActiveDialog("")}>
+            <button
+              style={{ marginBottom: 0 }}
+              className="secondary"
+              onClick={() => setActiveDialog("")}
+            >
               Cancel
             </button>
-            <button onClick={() => restart()}>Restart</button>
+            <button style={{ marginBottom: 0 }} onClick={() => restart()}>
+              Restart
+            </button>
           </footer>
         </article>
       </dialog>
