@@ -1,8 +1,17 @@
+.AppWrap {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
 .App {
-
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform-origin: center;
 }
 .game-wrap {
-  margin: 25px auto 0;
   background: #000;
   position: relative;
 }
@@ -49,7 +58,6 @@ dialog article > footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 auto;
   padding: 5px;
   font-size: .5rem;
   background: #333;
@@ -60,16 +68,17 @@ dialog article > footer {
   align-items: center;
 }
 .panel button {
+  height: 35px;
+  line-height: 35px;
   font-size: .5rem;
   margin-bottom: 0;
   display: inline-block !important;
-  padding: .5rem !important;
+  padding: 0 .5rem !important;
   width: auto !important;
   border: 0;
 }
 .panel button.icon {
   width: 35px;
-  height: 35px;
   min-width: 35px;
   text-indent: -100em;
   overflow: hidden;

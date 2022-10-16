@@ -5,7 +5,7 @@ export const generateGameState = (type = "cross") => {
   return TEMPLATES[type];
 };
 
-export const statusWatcher = (gameState) => {
+export const statusWatcher = gameState => {
   let availableMoves = 0;
   gameState.forEach((row, r) => {
     row.forEach((item, i) => {
@@ -57,9 +57,21 @@ export const statusWatcher = (gameState) => {
       }
     });
   });
-  const itemLeft = flatten(gameState).filter((i) => i === "1");
+  const itemLeft = flatten(gameState).filter(i => i === "1");
   return {
     availableMoves,
     itemLeft: itemLeft.length,
+  };
+};
+
+export const throttle = (func, delay) => {
+  let inProgress = false;
+  return (...args) => {
+    if (inProgress) return;
+    inProgress = true;
+    setTimeout(() => {
+      func(...args);
+      inProgress = false;
+    }, delay);
   };
 };
