@@ -5,7 +5,7 @@ import { generateGameState, statusWatcher } from "./utils";
 import { SIZE, BOARD_SIZE, TEMPLATES, ICONS } from "./constants";
 import wehWehSound from "./audios/weh-weh.mp3";
 import epicSound from "./audios/epic.mp3";
-// import splatSound from "./splat.mp3";
+import undoImg from "./images/undo.png";
 
 import "./App.css";
 
@@ -34,6 +34,18 @@ function App() {
     },
     [setActiveX, setActiveY]
   );
+
+  const undo = useCallback(() => {
+    const count = undoTree.length;
+    if (count < 1) return false;
+    const withoutLast = undoTree.slice(0, -1);
+    const targetStateIndex = withoutLast.length - 1;
+    const stateCheck = undoTree[targetStateIndex];
+    const targetState = stateCheck || TEMPLATES[type];
+
+    setUndoTree(withoutLast);
+    setGameState(targetState);
+  }, [undoTree, type, setUndoTree, setGameState]);
 
   const evaluateTarget = useCallback(
     (x, y) => {
@@ -121,10 +133,6 @@ function App() {
   }, [type, clearActive]);
 
   useEffect(() => {
-    console.log(undoTree);
-  }, [undoTree]);
-
-  useEffect(() => {
     restart();
   }, [type, restart]);
 
@@ -208,6 +216,14 @@ function App() {
       </div>
       <div className="panel" style={{ width: BOARD_SIZE }}>
         <div>
+          <button
+            className="icon"
+            disabled={undoTree.length < 1}
+            style={{ backgroundImage: `url(${undoImg})` }}
+            onClick={() => undo()}
+          >
+            Undo
+          </button>
           <button onClick={() => setActiveDialog("restart")}>Restart</button>
           <div style={{ padding: "0 1rem" }}>
             <small>{`Move: ${step}`}</small>
@@ -217,7 +233,7 @@ function App() {
           {Object.keys(TEMPLATES).map((item) => {
             return (
               <button
-                className="gametype"
+                className="icon"
                 style={{
                   backgroundColor:
                     item === type
