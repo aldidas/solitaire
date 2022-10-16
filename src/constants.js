@@ -1,5 +1,23 @@
+import crossIcon from "./images/cross.png";
+import plusIcon from "./images/plus.png";
+import fireplaceIcon from "./images/fireplace.png";
+import uparrowIcon from "./images/uparrow.png";
+import pyramidIcon from "./images/pyramid.png";
+import diamondIcon from "./images/diamond.png";
+import solitaireIcon from "./images/solitaire.png";
+
 export const SIZE = 7;
 export const BOARD_SIZE = 700;
+
+export const ICONS = {
+  cross: crossIcon,
+  plus: plusIcon,
+  fireplace: fireplaceIcon,
+  uparrow: uparrowIcon,
+  pyramid: pyramidIcon,
+  diamond: diamondIcon,
+  solitaire: solitaireIcon,
+};
 
 export const TEMPLATES = {
   cross: [

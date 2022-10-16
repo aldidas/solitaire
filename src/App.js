@@ -2,14 +2,19 @@ import { useState, useEffect, useCallback } from "react";
 import classnames from "classnames";
 import UIfx from "uifx";
 import { generateGameState, statusWatcher } from "./utils";
-import { SIZE, BOARD_SIZE, TEMPLATES } from "./constants";
-import wehWehSound from "./weh-weh.mp3";
+import { SIZE, BOARD_SIZE, TEMPLATES, ICONS } from "./constants";
+import wehWehSound from "./audios/weh-weh.mp3";
+import epicSound from "./audios/epic.mp3";
+// import splatSound from "./splat.mp3";
 
 import "./App.css";
 
+// const splat = new UIfx(splatSound);
 const wehWeh = new UIfx(wehWehSound);
+const epic = new UIfx(epicSound);
 
 function App() {
+  const [undoTree, setUndoTree] = useState([]);
   const [type, setType] = useState("cross");
   const [step, setStep] = useState(0);
   const [activeX, setActiveX] = useState(null);
@@ -97,7 +102,9 @@ function App() {
         newBetweenRow,
         ...stateAfterTarget.slice(betweenY + 1),
       ];
+      // splat.play();
       setGameState(stateAfterBetween);
+      setUndoTree((prev) => [...prev, stateAfterBetween]);
       const newStep = step + 1;
       setStep(newStep);
     },
@@ -109,17 +116,23 @@ function App() {
     setGameState(newGameState);
     setActiveDialog("");
     setStep(0);
+    setUndoTree([]);
     clearActive();
   }, [type, clearActive]);
 
   useEffect(() => {
-    restart()
+    console.log(undoTree);
+  }, [undoTree]);
+
+  useEffect(() => {
+    restart();
   }, [type, restart]);
 
   useEffect(() => {
     clearActive();
     const { availableMoves, itemLeft } = statusWatcher(gameState);
     if (itemLeft === 1) {
+      epic.play();
       setActiveDialog("win");
     } else if (step > 0 && availableMoves < 1) {
       wehWeh.play();
@@ -204,7 +217,14 @@ function App() {
           {Object.keys(TEMPLATES).map((item) => {
             return (
               <button
-                style={{ background: item === type ? 'rgb(16, 149, 193)' : '#333' }}
+                className="gametype"
+                style={{
+                  backgroundColor:
+                    item === type
+                      ? "rgb(16, 149, 193)"
+                      : "rgba(255, 255, 255, 0.1)",
+                  backgroundImage: `url(${ICONS[item]})`,
+                }}
                 key={item}
                 onClick={() => setType(item)}
               >
